@@ -2,6 +2,9 @@ const express = require("express");
 const server = express();
 const routes = require("./routes")
 
+// usando tamplate engine
+server.set('view engine', 'ejs')
+
 //habilitar arquivos statics
 server.use(express.static("public"))
 
