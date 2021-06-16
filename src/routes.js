@@ -18,18 +18,42 @@ const jobs = [
         name: "Pizzaria Guloso",
         "daily-hours": 3,
         "total-hours": 47,
-        created_at: Date.now()
+        created_at: Date.now(),
     },
     {
         id: 2,
         name: "ThreeFor Project",
         "daily-hours": 4,
         "total-hours": 53,
-        created_at: Date.now()
+        created_at: Date.now(),
     }
 ]
 
-routes.get('/', (req, res) => res.render(views + "index", { jobs }))
+function remainingDays(job) {
+    //calculo de tempo restante
+    const remainingDays = (job["total-hours"] / job["daily-hours"]).toFixed()
+
+    const createdDate = new Date(job.created_at)
+    const dueDay = createdDate.getDate() + Number(remainingDays)
+    const dueDateInMs = createdDate.setDate(dueDay)
+
+    const timeDiffInMs = dueDateInMs - Date.now()
+    // transformar milli em dias
+    const dayInMs = 1000 * 60 * 60 * 24
+    const dayDiff = Math.floor(timeDiffInMs / dayInMs)
+
+    return dayDiff
+}
+
+routes.get('/', (req, res) => {
+    const updatedJobs = jobs.map((job) => {
+
+
+        return job
+    })
+
+    return res.render(views + "index", { jobs })
+})
 routes.get('/job', (req, res) => res.render(views + "job"))
 routes.post('/job', (req, res) => {
     const lastId = jobs[jobs.length - 1]?.id || 1;
