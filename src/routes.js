@@ -9,22 +9,23 @@ const profile = {
     "monthly-budget": 3000,
     "days-per-week": 5,
     "hours-per-day": 5,
-    "vacation-per-year": 4
+    "vacation-per-year": 4,
+    "value-hour": 75
 }
 
 const jobs = [
     {
         id: 1,
         name: "Pizzaria Guloso",
-        "daily-hours": 3,
-        "total-hours": 47,
+        "daily-hours": 2,
+        "total-hours": 60,
         created_at: Date.now(),
     },
     {
         id: 2,
         name: "ThreeFor Project",
-        "daily-hours": 4,
-        "total-hours": 53,
+        "daily-hours": 3,
+        "total-hours": 47,
         created_at: Date.now(),
     }
 ]
@@ -47,12 +48,18 @@ function remainingDays(job) {
 
 routes.get('/', (req, res) => {
     const updatedJobs = jobs.map((job) => {
+        const remaining = remainingDays(job)
+        const status = remaining <= 0 ? 'done' : 'progress'
 
-
-        return job
+        return {
+            ...job,
+            remaining,
+            status,
+            budget: profile["value-hour"] * job["total-hours"]
+        }
     })
 
-    return res.render(views + "index", { jobs })
+    return res.render(views + "index", { jobs: updatedJobs })
 })
 routes.get('/job', (req, res) => res.render(views + "job"))
 routes.post('/job', (req, res) => {
